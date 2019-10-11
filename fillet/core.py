@@ -1,7 +1,8 @@
 """core.py
 """
-import platform
 import os
+import platform
+import subprocess
 
 
 OS = platform.system()
@@ -48,3 +49,22 @@ def full_binaries_path(filename):
 
 def minknow_config_path(filename):
     return os.path.join(_minknow_path(), "conf", filename)
+
+
+class sudoedit:
+    def __init__(self, path, octal_str="0664"):
+        self.path = path
+        self.octal_str = octal_str
+        self.old_oct = str(oct(os.stat(self.path).st_mode & 0o777)).replace("o", "")
+
+    def __enter__(self):
+        self.mod_perm(self.octal_str)
+        return self.path
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.mod_perm(self.old_oct)
+        return True
+
+    def mod_perm(self, perms):
+        p = subprocess.Popen(['sudo', "chmod", perms, self.path])
+        p.communicate()

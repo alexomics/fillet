@@ -39,7 +39,6 @@ def main():
     * sim    fillet.simulation
     * add    fillet.add_device
     """
-    # TODO: Move arguments to each sub-command and build here (see serve)
     parser = ArgumentParser(
         prog="fillet",
         epilog="See '<command> --help' to read about a specific sub-command.",
@@ -80,9 +79,22 @@ def main():
     sim_parser.set_defaults(func=run_command)
 
     """Add device"""
-    add_parser = subparsers.add_parser("add", help="Add a simulation MinION to MinKNOW")
+    add_parser = subparsers.add_parser(
+        "add",
+        help="Add a simulation MinION to MinKNOW",
+    )
     add_parser.add_argument(
-        "-r", help="Remove a simulated device.", action="store_true", dest="remove"
+        "-r",
+        help="Remove a simulated device.",
+        action="store_true",
+        dest="remove",
+    )
+    add_parser.add_argument(
+        "-n",
+        help="How many simulated devices to add.",
+        type=int,
+        dest="num",
+        default=1,
     )
     add_parser.set_defaults(func=run_command)
 
